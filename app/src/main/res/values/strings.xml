@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Translators</string>
+
+
+    <string name="search_icon_content_description">поиск</string>
+    <string name="search_input_layout_hint">Введите слово для перевода</string>
 </resources>
