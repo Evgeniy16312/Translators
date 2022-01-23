@@ -2,9 +2,9 @@ package com.example.translators.presentation.data.mappers
 
 import com.example.translators.presentation.data.model.MeaningsResponse
 import com.example.translators.presentation.domain.model.Meanings
+import javax.inject.Inject
 
-class MeaningsMapper {
-    private val translationMapper = TranslationMapper()
+class MeaningsMapper @Inject constructor(private val translationMapper: TranslationMapper) {
 
     private fun toDomain(meaningsResponse: MeaningsResponse): Meanings {
 

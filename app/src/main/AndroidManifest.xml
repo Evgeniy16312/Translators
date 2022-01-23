@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Translators">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.presentation.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

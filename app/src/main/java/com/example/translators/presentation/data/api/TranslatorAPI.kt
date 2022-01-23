@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.translators.presentation.data.api.ApiConstants.BASE_URL
 import com.example.translators.presentation.data.model.DataModelResponse
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -14,7 +15,7 @@ import retrofit2.http.Query
 
 interface TranslatorAPI {
     @GET("words/search")
-    fun search(@Query("search") wordToSearch: String): Observable<List<DataModelResponse>>
+    fun search(@Query("search") wordToSearch: String): Single<List<DataModelResponse>>
 
     companion object {
         fun create(): TranslatorAPI =

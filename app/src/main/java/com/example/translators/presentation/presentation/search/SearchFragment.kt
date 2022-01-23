@@ -6,35 +6,57 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.translators.R
 import com.example.translators.databinding.FragmentSearchBinding
-import com.example.translators.presentation.data.api.TranslatorAPI
-import com.example.translators.presentation.data.mappers.DataModelMapper
-import com.example.translators.presentation.data.repository.RepositoryImpl
+import com.example.translators.presentation.application.App
 import com.example.translators.presentation.presentation.adapter.SearchAdapter
 import com.example.translators.presentation.presentation.clearFocus
 import com.example.translators.presentation.presentation.hideKeyboard
-import com.example.translators.presentation.util.SchedulersProviderImplementation
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
-class SearchFragment : Fragment(R.layout.fragment_search), SearchContract.View {
+class SearchFragment : Fragment(R.layout.fragment_search) {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var presenter: SearchPresenter
+    private lateinit var presenter: SearchViewModel
 
-    private lateinit var adapter: SearchAdapter
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var searchButtonClickListener: View.OnClickListener
+    private val viewModel: SearchViewModel by viewModels { viewModelFactory }
 
-    private lateinit var errorSnackbar: Snackbar
+    private val adapter by lazy { SearchAdapter() }
+
+    private val searchButtonClickListener by lazy {
+        View.OnClickListener {
+            //So far isOnline is always true
+            viewModel.getData(binding.searchEditText.text.toString(), true)
+            hideErrorSnackbar()
+            cancelInput()
+        }
+    }
+
+    private val errorSnackbar: Snackbar by lazy {
+        Snackbar.make(
+            binding.root,
+            getString(R.string.search_error_text),
+            Snackbar.LENGTH_INDEFINITE
+        )
+            .setAction(
+                getString(R.string.search_try_again),
+                searchButtonClickListener
+            )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
@@ -43,26 +65,21 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        App.component.inject(this)
+
         setupUI()
     }
 
     private fun setupUI() {
-        initPresenter()
+        observeViewModel()
         initRecycler()
-        initSearchListener()
-        initErrorSnackbar()
+        setupSearchListener()
     }
 
-    private fun initPresenter() {
-        presenter = SearchPresenter(
-            RepositoryImpl(TranslatorAPI.create(), DataModelMapper()),
-            SchedulersProviderImplementation()
-        )
-        presenter.attachView(this)
-    }
+    private fun observeViewModel() =
+        viewModel.viewState.observe(viewLifecycleOwner) { updateUI(it) }
 
     private fun initRecycler() {
-        adapter = SearchAdapter(emptyList())
         binding.resultRecycler.adapter = adapter
         binding.resultRecycler.addItemDecoration(
             DividerItemDecoration(
@@ -72,14 +89,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchContract.View {
         )
     }
 
-    private fun initSearchListener() {
-        searchButtonClickListener = View.OnClickListener {
-            //So far isOnline is always true
-            presenter.getData(binding.searchEditText.text.toString(), true)
-            hideErrorSnackbar()
-            cancelInput()
-        }
-
+    private fun setupSearchListener() {
         binding.searchInputLayout.setEndIconOnClickListener(searchButtonClickListener)
         binding.searchEditText.setOnEditorActionListener { view, _, _ ->
             searchButtonClickListener.onClick(view)
@@ -87,7 +97,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchContract.View {
         }
     }
 
-    override fun renderData(viewState: SearchViewState) {
+    private fun updateUI(viewState: SearchViewState) {
         hideAllViews()
 
         when (viewState) {
@@ -113,21 +123,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchContract.View {
         binding.loadingFrame.isVisible = false
     }
 
-    private fun initErrorSnackbar() {
-        errorSnackbar = Snackbar.make(
-            binding.root,
-            getString(R.string.search_error_text),
-            Snackbar.LENGTH_INDEFINITE
-        )
-            .setAction(
-                getString(R.string.search_try_again),
-                searchButtonClickListener
-            )
-    }
-
     private fun showErrorSnackbar() =
         errorSnackbar.show()
-
 
     private fun hideErrorSnackbar() =
         errorSnackbar.dismiss()
@@ -140,6 +137,5 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchContract.View {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        presenter.detachView()
     }
 }
