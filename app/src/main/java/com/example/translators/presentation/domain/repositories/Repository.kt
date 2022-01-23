@@ -1,9 +1,10 @@
 package com.example.translators.presentation.domain.repositories
 
-import com.example.translators.presentation.domain.model.DataModel
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.Flow
+
 
 interface Repository<T : Any> {
-    fun getData(word: String, fromRemoteSource: Boolean): Single<List<DataModel>>
+
+    suspend fun getData(word: String, fromRemoteSource: Boolean): Flow<List<T>>
+
 }

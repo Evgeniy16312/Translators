@@ -2,14 +2,19 @@ package com.example.translators.presentation.application
 
 
 import android.app.Application
-import com.example.translators.presentation.di.AppComponent
-import com.example.translators.presentation.di.DaggerAppComponent
+import com.example.translators.presentation.di.application
+import com.example.translators.presentation.di.searchScreen
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
 class App : Application() {
 
-    companion object {
-        val component: AppComponent by lazy {
-            DaggerAppComponent.builder().build()
+    override fun onCreate() {
+        super.onCreate()
+
+        org.koin.core.context.startKoin {
+            androidContext(this@App)
+            modules(listOf(application, searchScreen))
         }
     }
 }
