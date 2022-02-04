@@ -15,7 +15,7 @@ class SearchViewModel(
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
-     private val _viewState = MutableStateFlow<SearchViewState>(SearchViewState.CallToAction)
+    private val _viewState = MutableStateFlow<SearchViewState>(SearchViewState.CallToAction)
 
     val viewState: StateFlow<SearchViewState> get() = _viewState.asStateFlow()
 

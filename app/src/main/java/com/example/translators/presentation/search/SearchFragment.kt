@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.translators.R
 import com.example.translators.databinding.FragmentSearchBinding
@@ -14,8 +16,15 @@ import com.example.translators.presentation.search.adapter.SearchAdapter
 import com.example.translators.presentation.presentation.clearFocus
 import com.example.translators.presentation.presentation.hideKeyboard
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@FlowPreview
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
     private var _binding: FragmentSearchBinding? = null
@@ -23,7 +32,20 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     private val viewModel: SearchViewModel by viewModel()
 
-    private val adapter by lazy { SearchAdapter() }
+    private val adapter by lazy {
+        SearchAdapter(
+            listener = { dataModel ->
+                findNavController().navigate(
+                    SearchFragmentDirections.actionSearchFragmentToDetailFragment(
+                        dataModel = dataModel,
+                        label = dataModel.text
+                    )
+                )
+            }
+        )
+    }
+
+    private val queryStateFlow = MutableStateFlow("")
 
     private val searchButtonClickListener by lazy {
         View.OnClickListener {
@@ -57,7 +79,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupUI()
     }
 
@@ -65,6 +86,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         observeViewStateUpdates()
         initRecycler()
         setupSearchListener()
+        setupSearchStateFlow()
     }
 
     private fun observeViewStateUpdates() =
@@ -87,6 +109,30 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         binding.searchEditText.setOnEditorActionListener { view, _, _ ->
             searchButtonClickListener.onClick(view)
             true
+        }
+    }
+
+    private fun setupSearchStateFlow() {
+        binding.searchEditText.doOnTextChanged { text, _, _, _ ->
+            queryStateFlow.value = text.toString()
+        }
+
+        lifecycleScope.launch {
+            queryStateFlow
+                .debounce(500)
+                .filter { query ->
+                    if (query.isEmpty()) {
+                        binding.searchEditText.setText("")
+                        return@filter false
+                    } else {
+                        return@filter true
+                    }
+                }
+                .distinctUntilChanged()
+                .collect { query ->
+                    viewModel.getData(query, true)
+                    hideErrorSnackbar()
+                }
         }
     }
 

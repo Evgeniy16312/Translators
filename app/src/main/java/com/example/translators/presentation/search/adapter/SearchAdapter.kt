@@ -8,8 +8,9 @@ import com.example.translators.databinding.FragmentSearchListItemBinding
 import com.example.translators.domain.model.DataModel
 
 class SearchAdapter(
-    private var data: List<DataModel> = emptyList())
-    : RecyclerView.Adapter<SearchViewHolder>() {
+    private var data: List<DataModel> = emptyList(),
+    private val listener: (dataModel: DataModel) -> Unit
+) : RecyclerView.Adapter<SearchViewHolder>() {
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(data: List<DataModel>) {
@@ -26,11 +27,9 @@ class SearchAdapter(
             )
         )
 
-    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        holder.bind(data[position])
-    }
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) =
+        holder.bind(data[position], listener)
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
+    override fun getItemCount(): Int = data.size
+
 }

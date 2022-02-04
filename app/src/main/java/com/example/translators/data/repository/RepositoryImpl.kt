@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flowOf
 @FlowPreview
 class RepositoryImpl(
     private val translatorApi: TranslatorAPI,
-    private val dataModelMapper: DataModelMapper
+    private val dataModelMapper: DataModelMapper,
 ) : Repository<DataModel> {
 
     override suspend fun getData(word: String, fromRemoteSource: Boolean): Flow<List<DataModel>> {
