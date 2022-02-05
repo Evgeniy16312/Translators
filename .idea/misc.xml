@@ -7,9 +7,19 @@
         <entry key="..\:/Users/E2772/AndroidStudioProjects/Translators/app/src/main/res/layout/activity_main.xml" value="0.18695652173913044" />
         <entry key="..\:/Users/E2772/AndroidStudioProjects/Translators/app/src/main/res/layout/fragment_search.xml" value="0.1" />
         <entry key="..\:/Users/E2772/AndroidStudioProjects/Translators/app/src/main/res/layout/fragment_search_list_item.xml" value="0.2814814814814815" />
+        <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/drawable/c_sound.xml" value="0.116" />
+        <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/drawable/ic_baseline_history_24.xml" value="0.116" />
+        <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/drawable/ic_delete_24.xml" value="0.1515" />
+        <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/drawable/ic_load_error_vector.xml" value="0.116" />
+        <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/drawable/ic_no_photo_vector.xml" value="0.116" />
         <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/layout-v31/fragment_search.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/layout/activity_main.xml" value="0.20427305888483585" />
+        <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/layout/fragment_detail.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/layout/fragment_history.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/layout/fragment_history_list_item.xml" value="0.2" />
         <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/layout/fragment_search.xml" value="0.1" />
+        <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/menu/action_bar_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Turins/AndroidStudioProjects/Translators/app/src/main/res/menu/history_action_bar_menu.xml" value="0.22" />
       </map>
     </option>
   </component>
