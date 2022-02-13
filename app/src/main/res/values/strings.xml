@@ -14,4 +14,5 @@
     <string name="play_audio">play_audio</string>
     <string name="empty_history_message">empty_history_message</string>
     <string name="delete">delete</string>
+    <string name="translate_gif">translate_gif</string>
 </resources>
