@@ -2,10 +2,10 @@ package com.example.translators.presentation.data.mappers
 
 import com.example.translators.presentation.data.model.DataModelResponse
 import com.example.translators.presentation.domain.model.DataModel
+import javax.inject.Inject
 
 
-class DataModelMapper {
-    private val meaningsMapper = MeaningsMapper()
+class DataModelMapper @Inject constructor(private val meaningsMapper: MeaningsMapper) {
 
     private fun toDomain(dataModelResponse: DataModelResponse): DataModel {
         requireNotNull(dataModelResponse.meanings)

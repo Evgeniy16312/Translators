@@ -1,4 +1,4 @@
-package com.example.translators.presentation
+package com.example.translators.presentation.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
